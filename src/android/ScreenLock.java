@@ -18,29 +18,12 @@ public class ScreenLock extends CordovaPlugin {
 
         return true;
     }
-    
-    public static boolean doesDeviceHaveSecuritySetup(Context context)
-    {
-        return isPatternSet(context) || isPassOrPinSet(context);
-    }
 
-    private static boolean isPatternSet(Context context)
-    {
-        ContentResolver cr = context.getContentResolver();
-        try
-        {
-            int lockPatternEnable = Settings.Secure.getInt(cr, Settings.Secure.LOCK_PATTERN_ENABLED);
-            return lockPatternEnable == 1;
-        }
-        catch (Settings.SettingNotFoundException e)
-        {
-            return false;
-        }
-    }
-
-    private static boolean isPassOrPinSet(Context context)
+    private static boolean doesDeviceHaveSecuritySetup(Context context)
     {
         KeyguardManager keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE); //api 16+
+        // https://developer.android.com/reference/android/app/KeyguardManager.html#isKeyguardSecure()
+        // Return whether the keyguard is secured by a PIN, pattern or password or a SIM card is currently locked.
         return keyguardManager.isKeyguardSecure();
     }
 }
